@@ -21,13 +21,40 @@
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
-			<value>/WEB-INF/views/</value>
+			<value>/WEB-INF/pages/</value>
 		</property>
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
 	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		  p:driverClassName="${jdbc.driverClassName}"
+		  p:url="${jdbc.url}"
+		  p:username="${jdbc.username}"
+		  p:password="${jdbc.password}"
+			/>
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		  p:dataSource-ref="dataSource"
+		  p:packagesToScan="org.proffart.events.domain">
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.showSql}</prop>
+				<prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- Allow declarative transaction management using the @Transactional annotation -->
+	<tx:annotation-driven transaction-manager="txnManager"/>
+	<!-- Transaction manager for the Hibernate SessionFactory -->
+	<bean id="txnManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		  p:sessionFactory-ref="sessionFactory"/>
+	<!-- Apply persistence Exception translation on @Repository classes -->
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+
     <mvc:resources mapping="/resources/**" location="/resources/" />
 	
 	<mvc:annotation-driven />
