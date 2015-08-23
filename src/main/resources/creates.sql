@@ -1,13 +1,13 @@
-CREATE SCHEMA `events`
-  DEFAULT CHARACTER SET utf8
-  COLLATE utf8_unicode_ci;
+# CREATE SCHEMA `events`
+#   DEFAULT CHARACTER SET utf8
+#   COLLATE utf8_unicode_ci;
 
 
 DROP TABLE IF EXISTS `clients`;
 
 CREATE TABLE `clients` (
   `clientId` INT(11)      NOT NULL AUTO_INCREMENT,
-  `login`    VARCHAR(75)  NOT NULL,
+  `login`    CHAR(75)  NOT NULL,
   `passHash` VARCHAR(64)  NULL,
   `name`     VARCHAR(64)  NULL,
   `phone`    VARCHAR(150) NULL,
